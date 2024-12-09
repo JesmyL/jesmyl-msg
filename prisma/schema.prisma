@@ -1,0 +1,99 @@
+// LOCAL
+// npx prisma migrate dev
+// ... --push-back
+
+// SSH
+// cd /var/www/jesmyl.ru/
+// npx prisma migrate dev
+// cd /
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["debian-openssl-3.0.x", "debian-openssl-1.1.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        BigInt    @id @unique @default(autoincrement())
+  fio       String
+  nick      String
+  login     String
+  tgId      BigInt?
+  tgAva     String?
+  lastVisit DateTime?
+
+  rights       Rights[]
+  asChatMember ChatMember[]
+}
+
+model Rights {
+  userId BigInt @unique
+
+  cm    Int[]
+  bible Int[]
+  index Int[]
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+//////////////////////////////////////////// CHATS:
+
+model Message {
+  id             BigInt      @id @unique @default(autoincrement())
+  chatid         BigInt
+  sentMemberId   BigInt
+  replyMessageId BigInt?
+  createdAt      DateTime    @default(now())
+  editedAt       DateTime    @default(now())
+  text           String
+  prevText       String?
+  type           MessageType
+  isRemoved      Boolean     @default(false)
+
+  sentMember ChatMember @relation(fields: [sentMemberId], references: [id])
+  chat       Chat       @relation(fields: [chatid], references: [id])
+}
+
+enum MessageType {
+  ChatCreate
+  ChatRename
+  Text
+  BigText
+  NewMember
+  Remove
+}
+
+model Chat {
+  id     BigInt @id @unique @default(autoincrement())
+  chatId String @unique @default(cuid())
+  title  String
+
+  members  ChatMember[]
+  messages Message[]
+}
+
+model ChatMember {
+  id     BigInt             @id @unique @default(autoincrement())
+  userId BigInt
+  chatid BigInt
+  rights ChatMemberRights[]
+
+  chat         Chat      @relation(fields: [chatid], references: [id])
+  user         User      @relation(fields: [userId], references: [id])
+  sentMessages Message[]
+
+  @@unique([userId, chatid])
+}
+
+enum ChatMemberRights {
+  Creator
+  Admin
+  User
+  CantSendMessage
+}
+
+//////////////////////////////////////////// CHATS;
