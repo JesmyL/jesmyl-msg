@@ -1,12 +1,14 @@
 /* @refresh reload */
-import { HashRouter, Route } from '@solidjs/router';
+import { MetaProvider, Title } from '@solidjs/meta';
 import { GlobalStyles, ThemeProvider } from '@suid/material';
+import { JSX, lazy } from 'solid-js';
 import { render } from 'solid-js/web';
-import { App } from './_pages/app';
-import { ChatsPage } from './_pages/chats';
-import { soki } from './soki/soki';
+import { SMyLib, smylib } from '../shared/utils';
 import { globalStyles } from './styles/globalStyles';
 import { theme } from './styles/theme';
+
+const ChatingRouter = lazy(() => import('./apps/chating'));
+const InviteRouter = lazy(() => import('./apps/invite'));
 
 const root = document.getElementById('root');
 
@@ -16,24 +18,26 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
   );
 }
 
-soki.start();
+export const renderApplication = (specialAppName = location.hostname) => {
+  const apps: Record<string, () => JSX.Element> = {
+    [smylib.charCodedTextToString([14300, 14980, 16068, 14300, 15796, 13756, 6276])]: InviteRouter,
+    [smylib.charCodedTextToString([14844, 15660, 14028, 6276])]: ChatingRouter,
+  };
 
-export const renderApplication = () => {
+  const appRoutesKey = SMyLib.keys(apps).find(key => specialAppName.startsWith(key));
+
+  if (appRoutesKey === undefined) return;
+  const App = apps[appRoutesKey];
+
   render(
     () => (
-      <ThemeProvider theme={theme}>
-        <GlobalStyles styles={globalStyles} />
-        <HashRouter root={App}>
-          <Route
-            path="/"
-            component={ChatsPage}
-          />
-          {/* <Route
-            path=":chatId"
-            component={ChatPage}
-          /> */}
-        </HashRouter>
-      </ThemeProvider>
+      <MetaProvider>
+        <Title>..</Title>
+        <ThemeProvider theme={theme}>
+          <GlobalStyles styles={globalStyles} />
+          <App />
+        </ThemeProvider>
+      </MetaProvider>
     ),
     root!,
   );

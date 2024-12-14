@@ -2,6 +2,11 @@ import { WebSocket } from 'ws';
 import { Auth } from './auth';
 import { ItChat } from './chat';
 
+import * as JSoki from '../../../../../jesmyl-pwa/src/shared/api/complect/enums';
+import * as JSokiApi from '../../../../../jesmyl-pwa/src/shared/api/complect/soki';
+
+export { JSoki, JSokiApi };
+
 export type SokiServerEvent = {
   chatsData?: ChatsData;
   requestId?: string;

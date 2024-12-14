@@ -36,7 +36,7 @@ export class TBMessages extends PrismaTbSelectors {
     chatId: ItChat.ChatId,
     fromMessageId?: ItChat.MessageId,
     isMessageStart?: boolean,
-    fetchCount = 830,
+    fetchCount = 30,
   ) {
     return this.tb.$transaction(async () => {
       const chat = await this.tb.chat.findFirst({ where: { chatId } });
@@ -116,7 +116,7 @@ export class TBMessages extends PrismaTbSelectors {
         take: 30 - beforeMessages.length,
       });
 
-      const messages = [...beforeMessages, ...afterMessages];
+      const messages = [...beforeMessages.reverse(), ...afterMessages];
 
       return {
         alternativeMessages: messages as ItChat.ImportableMessage[],
@@ -203,7 +203,7 @@ export class TBMessages extends PrismaTbSelectors {
         chat: chatNewInfo as never as ItChat.ChatMiniInfo,
         removedMessages: (await this.tb.message.findMany({
           where,
-          select: { id: true, isRemoved: true, chatid: true },
+          select: { id: true, isRemoved: true },
         })) as never as ItChat.ImportableMessage[],
       };
     });

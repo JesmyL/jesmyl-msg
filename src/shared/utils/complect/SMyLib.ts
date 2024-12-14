@@ -245,7 +245,7 @@ export class SMyLib {
 
     absNum %= 10;
 
-    return absNum > 1 && absNum < 5 ? two! : absNum === 1 ? one! : five ?? two!;
+    return absNum > 1 && absNum < 5 ? two! : absNum === 1 ? one! : (five ?? two!);
   }
 
   stringTemplaterFunctions = {
@@ -521,6 +521,19 @@ export class SMyLib {
 
     return items;
   }
+
+  charCodedTextToString = charCodedTextToString;
+  makeCharCodedTextLine = makeCharCodedTextLine;
 }
+
+const { charCodedTextToString, makeCharCodedTextLine } = (() => {
+  const pow = 136;
+  const plu = 20;
+
+  return {
+    makeCharCodedTextLine: (text: string) => JSON.stringify(text.split('').map(char => char.charCodeAt(0) * pow + plu)),
+    charCodedTextToString: (list: number[]) => list.map(li => String.fromCharCode((li - plu) / pow)).join(''),
+  };
+})();
 
 export const smylib = new SMyLib();

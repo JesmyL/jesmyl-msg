@@ -23,6 +23,7 @@
     "ws": "^8.18.0"
   },
   "dependencies": {
+    "@solidjs/meta": "^0.29.4",
     "@solidjs/router": "^0.15.1",
     "@suid/icons-material": "^0.8.1",
     "@suid/material": "^0.18.0",

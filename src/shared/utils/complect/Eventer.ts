@@ -18,6 +18,13 @@ export type EventerValueListeners<Value, Return = void> =
   | EventerValueCallback<Value, Return>[]
   | Set<EventerValueCallback<Value, Return>>;
 
+export type EventerListenScope<Value = void> = {
+  listen: (cb: EventerValueCallback<Value>) => () => void;
+  listenFirst: (cb: EventerValueCallback<Value>) => void;
+  mute: (cb: EventerValueCallback<Value>) => void;
+  invoke: (value: Value) => Value;
+};
+
 export class Eventer {
   static listen = <
     Lis extends EventerListeners<any, Return>,
@@ -134,13 +141,19 @@ export class Eventer {
     return value;
   };
 
-  static createValue<Value = void>() {
+  static createValue<Value = void>(): EventerListenScope<Value> {
     const listeners: EventerValueListeners<Value> = new Set();
 
     return {
-      listen: (cb: EventerValueCallback<Value>) => this.listenValue(listeners, cb),
-      mute: (cb: EventerValueCallback<Value>) => this.muteValue(listeners, cb),
-      invoke: (value: Value) => this.invokeValue(listeners, value),
+      listen: cb => this.listenValue(listeners, cb),
+      mute: cb => this.muteValue(listeners, cb),
+      invoke: value => this.invokeValue(listeners, value),
+      listenFirst: cb => {
+        const rem = this.listenValue(listeners, value => {
+          cb(value);
+          rem();
+        });
+      },
     };
   }
 }

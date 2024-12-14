@@ -67,6 +67,12 @@ export namespace ItChat {
     members: ChatMember[];
   }
 
+  export interface ChatDetails {
+    chatid: Chatid;
+    alternativeAccentMessageId?: ItChat.MessageId;
+    accentMessageId?: ItChat.MessageId;
+  }
+
   export type ChatLastReadTimeStamp = { messageId: ItChat.MessageId; chatId: ItChat.ChatId };
 
   export const editableMessageTypesSet = new Set<MessageType>([MessageType.BigText, MessageType.Text]);

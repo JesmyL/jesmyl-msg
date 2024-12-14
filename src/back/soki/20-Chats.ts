@@ -30,7 +30,7 @@ export class SokiServerChats extends SokiServerConnection {
   private async doOnChatsFetchData(event: SokiClientEvent, client: WebSocket) {
     if (event.fetchChats === undefined) throw new Error();
 
-    this.send({ chatsData: { users: await TBUsers.getAll() } }, client);
+    this.send({ chatsData: { users: await TBUsers.getAll() }, requestId: event.requestId }, client);
   }
 
   private sendChatsDataToMembers = (
@@ -68,7 +68,6 @@ export class SokiServerChats extends SokiServerConnection {
     }
 
     if (eventFetch.pullMessages != null) {
-      console.log(eventFetch);
       const { messages, unreachedMessages } =
         eventFetch.pullMessages === true
           ? await TBMessages.combineWithRemoved(chatId)
@@ -86,6 +85,7 @@ export class SokiServerChats extends SokiServerConnection {
             messages,
             unreachedMessages,
           },
+          requestId: event.requestId,
         },
         client,
       );
@@ -103,6 +103,7 @@ export class SokiServerChats extends SokiServerConnection {
             alternativeMessages,
             unreachedMessages,
           },
+          requestId: event.requestId,
         },
         client,
       );
