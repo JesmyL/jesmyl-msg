@@ -5,7 +5,9 @@ import { styler } from '../../../../css';
 import { sokij } from '../../../../soki/soki';
 import { createProducedStore } from '../../../../store/useProducedStore';
 import { knownUtilTypographyClassNames } from '../../../../styles/known-class-names';
+import alexey from './src/alexey.png';
 import bottom from './src/bottom.svg';
+import church from './src/church.png';
 import date from './src/date.svg';
 import head from './src/head.svg';
 import program from './src/program.svg';
@@ -40,16 +42,52 @@ export const ChristmasInvitePage = () => {
   // });
 
   const images: Record<string, { style?: JSX.CSSProperties; cb?: (img: JSX.Element) => JSX.Element }> = {
-    [head]: { cb: img => img },
+    [head]: {},
     [date]: {
       style: {
-        'margin-top': 'calc(var(--stock-width) / -6)',
+        'margin-top': 'calc(var(--stock-width) / -25)',
       },
+      cb: img => (
+        <Div
+          sx={{
+            ...knownUtilTypographyClassNames.relative,
+          }}
+        >
+          {img}
+          <Img
+            src={church}
+            sx={{
+              ...knownUtilTypographyClassNames.absolute,
+              width: '65.6%',
+              bottom: '6.2%',
+              left: '17.2%',
+            }}
+          />
+        </Div>
+      ),
     },
     [program]: {
       style: {
-        'margin-top': 'calc(var(--stock-width) / 15)',
+        'margin-top': 'calc(var(--stock-width) / 10)',
       },
+      cb: img => (
+        <Div
+          sx={{
+            ...knownUtilTypographyClassNames.relative,
+          }}
+        >
+          {img}
+          <Img
+            src={alexey}
+            sx={{
+              ...knownUtilTypographyClassNames.absolute,
+              width: '45%',
+              bottom: '5.4%',
+              left: '27.2%',
+            }}
+          />
+        </Div>
+      ),
     },
     [bottom]: {
       style: {
@@ -57,21 +95,21 @@ export const ChristmasInvitePage = () => {
         'margin-bottom': 'calc(var(--stock-width) / 15)',
       },
       cb: img => (
-        <StyledButtonArea
+        <Div
           sx={{
             ...knownUtilTypographyClassNames.relative,
             ...knownUtilTypographyClassNames['flex-center'],
           }}
         >
           {img}
-          <StyledButton
+          <Anchor
             href="https://t.me/+cvT_s8GrLZkxYzgy"
             sx={{
               ...knownUtilTypographyClassNames.absolute,
               ...knownUtilTypographyClassNames.pointer,
-              top: '59%',
-              height: '11%',
-              width: '32%',
+              top: '42%',
+              height: '8.5%',
+              width: '31%',
             }}
             // onClick={() => {
             //   if (isCome() !== JSoki.IsInvitedGuestCome.Ignored) return;
@@ -91,7 +129,7 @@ export const ChristmasInvitePage = () => {
             //     });
             // }}
           />
-        </StyledButtonArea>
+        </Div>
       ),
     },
   };
@@ -139,8 +177,9 @@ export const ChristmasInvitePage = () => {
   );
 };
 
-const StyledButtonArea = styler('div')();
-const StyledButton = styler('a')();
+const Div = styler('div')();
+const Anchor = styler('a')();
+const Img = styler('img')();
 
 const StockImg = styler('img')({
   maxWidth: '100%',
@@ -152,7 +191,9 @@ const StyledStock = styler('div')({
 });
 
 const StyledCard = styler('div')({
-  '--stock-width': 'min(600px, 100dvw)' as never,
+  '--stock-width': 'min(600px, 100dvw)' as {},
   backgroundColor: '#FEFAEF',
   minHeight: '100dvh',
 });
+
+// scp -r ./dist/* root@89.104.71.170:/var/www/html # XE5fYQaR41ostIS8
