@@ -195,5 +195,3 @@ const StyledCard = styler('div')({
   backgroundColor: '#FEFAEF',
   minHeight: '100dvh',
 });
-
-// scp -r ./dist/* root@89.104.71.170:/var/www/html # XE5fYQaR41ostIS8
